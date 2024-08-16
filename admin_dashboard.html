@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div>
+        <h2>Queue</h2>
+        <button onclick="fetchQueue()">Fetch Queue</button>
+        <pre id="queue"></pre>
+    </div>
+    <div>
+        <h2>Whitelist Asset</h2>
+        <input type="text" id="whitelistId" placeholder="Asset ID">
+        <button onclick="whitelistAsset()">Whitelist Asset</button>
+        <pre id="whitelistResult"></pre>
+    </div>
+    <div>
+        <h2>Remove Asset</h2>
+        <input type="text" id="removeId" placeholder="Asset ID">
+        <button onclick="removeAsset()">Remove Asset</button>
+        <pre id="removeResult"></pre>
+    </div>
+    <script>
+        async function fetchQueue() {
+            const response = await fetch('/assets');
+            const data = await response.json();
+            document.getElementById('queue').textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function whitelistAsset() {
+            const assetId = document.getElementById('whitelistId').value;
+            const response = await fetch('/whitelist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ assetId })
+            });
+            const result = await response.json();
+            document.getElementById('whitelistResult').textContent = JSON.stringify(result, null, 2);
+        }
+
+        async function removeAsset() {
+            const assetId = document.getElementById('removeId').value;
+            const response = await fetch('/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ assetId })
+            });
+            const result = await response.json();
+            document.getElementById('removeResult').textContent = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html>
